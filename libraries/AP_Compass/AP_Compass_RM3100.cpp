@@ -158,8 +158,9 @@ bool AP_Compass_RM3100::init()
         set_external(compass_instance, true);
     }
     
-    // call timer() at 80Hz
-    dev->register_periodic_callback(1000000U/80U,
+	// XF 5/27/24: Change sampling rate to 150 Hz
+    // call timer() at 150Hz
+    dev->register_periodic_callback(1000000U/150U,
                                     FUNCTOR_BIND_MEMBER(&AP_Compass_RM3100::timer, void));
 
     return true;

@@ -440,9 +440,9 @@ struct PACKED log_MAG {
     LOG_PACKET_HEADER;
     uint64_t time_us;
     uint8_t  instance;
-    int16_t  mag_x;
-    int16_t  mag_y;
-    int16_t  mag_z;
+    float  mag_x; // XF 5/28/24: Changed mag_x, mag_y and mag_z types to float for higher resolution logging.
+    float  mag_y;
+    float  mag_z;
     int16_t  offset_x;
     int16_t  offset_y;
     int16_t  offset_z;
@@ -1185,7 +1185,7 @@ struct PACKED log_VER {
 // @Field: ThrOut: Throttle output
 // @Field: FailFlags: bit 0 motor failed, bit 1 motors balanced, should be 2 in normal flight
 
-// messages for all boards
+// messages for all boards // XF 5/28/24: On line 1232 changed type for MagX, MagY and MagZ to float for higher resolution logging.
 #define LOG_COMMON_STRUCTURES \
     { LOG_FORMAT_MSG, sizeof(log_Format), \
       "FMT", "BBnNZ",      "Type,Length,Name,Format,Columns", "-b---", "-----" },    \
@@ -1229,7 +1229,7 @@ LOG_STRUCTURE_FROM_MOUNT \
     { LOG_ARSP_MSG, sizeof(log_ARSP), "ARSP",  "QBffcffBBffB", "TimeUS,I,Airspeed,DiffPress,Temp,RawPress,Offset,U,H,Hp,TR,Pri", "s#nPOPP-----", "F-00B00-----", true }, \
     LOG_STRUCTURE_FROM_BATTMONITOR \
     { LOG_MAG_MSG, sizeof(log_MAG), \
-      "MAG", "QBhhhhhhhhhBI",    "TimeUS,I,MagX,MagY,MagZ,OfsX,OfsY,OfsZ,MOX,MOY,MOZ,Health,S", "s#GGGGGGGGG-s", "F-CCCCCCCCC-F", true }, \
+      "MAG", "QBfffhhhhhhBI",    "TimeUS,I,MagX,MagY,MagZ,OfsX,OfsY,OfsZ,MOX,MOY,MOZ,Health,S", "s#GGGGGGGGG-s", "F-CCCCCCCCC-F", true }, \
     { LOG_MODE_MSG, sizeof(log_Mode), \
       "MODE", "QMBB",         "TimeUS,Mode,ModeNum,Rsn", "s---", "F---" }, \
     { LOG_RFND_MSG, sizeof(log_RFND), \

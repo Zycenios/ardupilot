@@ -408,9 +408,9 @@ void AP_Logger::Write_Compass_instance(const uint64_t time_us, const uint8_t mag
         LOG_PACKET_HEADER_INIT(LOG_MAG_MSG),
         time_us         : time_us,
         instance        : mag_instance,
-        mag_x           : (int16_t)mag_field.x,
-        mag_y           : (int16_t)mag_field.y,
-        mag_z           : (int16_t)mag_field.z,
+        mag_x           : (float)mag_field.x, // XF 5/28/24: Changed mag_x, mag_y and mag_z types to float for higher resolution logging.
+        mag_y           : (float)mag_field.y,
+        mag_z           : (float)mag_field.z,
         offset_x        : (int16_t)mag_offsets.x,
         offset_y        : (int16_t)mag_offsets.y,
         offset_z        : (int16_t)mag_offsets.z,
