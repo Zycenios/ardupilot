@@ -1,0 +1,112 @@
+
+# hw definition file for processing by chibios_hwdef.py
+# for SokilF405V1 hardware.
+# based on SPEEDYBEEF405MINI
+# by Xander Fries, 8/23/24
+
+# MCU class and specific type
+MCU STM32F4xx STM32F405xx
+
+# board ID for firmware load
+APJ_BOARD_ID 33333
+
+# crystal frequency, setup to use external oscillator
+OSCILLATOR_HZ 8000000
+
+FLASH_SIZE_KB 1024
+
+# bootloader takes first sector
+FLASH_RESERVE_START_KB 48
+
+define HAL_STORAGE_SIZE 16384
+define STORAGE_FLASH_PAGE 1
+
+# SPI devices
+
+# SPI1
+PA5 SPI1_SCK SPI1
+PA6 SPI1_MISO SPI1
+PA7 SPI1_MOSI SPI1
+
+# SPI3
+PB3 SPI3_SCK SPI3
+PB4 SPI3_MISO SPI3
+PB5 SPI3_MOSI SPI3
+
+# Chip select pins
+PC14 FLASH1_CS CS
+PA4 GYRO1_CS CS
+
+# SERIAL ports
+SERIAL_ORDER OTG1 USART6
+# PA10 IO-debug-console
+PA11 OTG_FS_DM OTG1
+PA12 OTG_FS_DP OTG1
+
+# USART6 (GPS)
+PC6 USART6_TX USART6
+PC7 USART6_RX USART6
+define DEFAULT_SERIAL1_PROTOCOL SerialProtocol_GPS
+#define DEFAULT_SERIAL6_PROTOCOL Foobar
+
+# I2C ports
+I2C_ORDER I2C1
+# I2C1
+PB8 I2C1_SCL I2C1
+PB9 I2C1_SDA I2C1
+
+# ADC ports
+
+# ADC1
+PC0 BATT_VOLTAGE_SENS ADC1 SCALE(1)
+define HAL_BATT_VOLT_PIN 10
+define HAL_BATT_VOLT_SCALE 2.0
+PC1 BATT_CURRENT_SENS ADC1 SCALE(1)
+define HAL_BATT_CURR_PIN 11
+define HAL_BATT_CURR_SCALE 40.0
+
+# LEDs
+PB12 LED0 OUTPUT LOW GPIO(90)
+define HAL_GPIO_A_LED_PIN 90
+
+# microSD support
+PC8 SDIO_D0 SDIO
+PC9 SDIO_D1 SDIO
+PC10 SDIO_D2 SDIO
+PC11 SDIO_D3 SDIO
+PC12 SDIO_CK SDIO
+PD2 SDIO_CMD SDIO
+
+# Enable FAT filesystem support (needs a microSD defined via SDIO).
+define HAL_OS_FATFS_IO 1
+
+# Defines for logging and terrain data files.
+define HAL_BOARD_LOG_DIRECTORY "/APM/LOGS"
+define HAL_BOARD_TERRAIN_DIRECTORY "/APM/TERRAIN"
+
+
+# Dataflash setup
+SPIDEV dataflash SPI3 DEVID1 FLASH1_CS     MODE3 104*MHZ 104*MHZ
+
+#define HAL_LOGGING_DATAFLASH_ENABLED 1
+
+# Barometer setup
+BARO DPS310 I2C:0:0x77
+        
+# IMU setup
+SPIDEV imu1   SPI1 DEVID1 GYRO1_CS   MODE3   1*MHZ   8*MHZ
+
+IMU Invensensev3 SPI:imu1 ROTATION_NONE
+#DMA_NOSHARE TIM4_UP TIM3_UP SPI1*
+DMA_PRIORITY SPI1*
+
+# no built-in compass, but probe the i2c bus for all possible
+# external compass types
+define ALLOW_ARM_NO_COMPASS
+define HAL_PROBE_EXTERNAL_I2C_COMPASSES
+define HAL_I2C_INTERNAL_MASK 0
+define HAL_COMPASS_AUTO_ROT_DEFAULT 2
+define HAL_DEFAULT_INS_FAST_SAMPLE 3
+
+# Disable some features to save flash memory
+include ../include/minimize_common.inc
