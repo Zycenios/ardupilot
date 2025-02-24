@@ -24,7 +24,7 @@
 extern const AP_HAL::HAL &hal;
 
 // WHOAMI values
-#define LPS22HB_WHOAMI 0xB1
+#define LPS22HB_WHOAMI 0xB3
 #define LPS25HB_WHOAMI 0xBD
 
 #define REG_ID                     0x0F
